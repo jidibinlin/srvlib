@@ -40,7 +40,7 @@ const (
 	NetInterfacePrefix = "$iface"
 )
 
-func EvalVarToGetHost(ipVar string) (string, error) {
+func EvalVarToParseIp(ipVar string) (string, error) {
 	if ipVar == InnerIp {
 		innerIps, err := GetLocalIpsWithoutLoopback()
 		if err != nil {
