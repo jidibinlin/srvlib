@@ -3,9 +3,9 @@ package redis
 import "github.com/995933447/redisgroup"
 
 type NodeConf struct {
-	host     string
-	port     int
-	password string
+	Host     string
+	Port     int
+	Password string
 }
 
 var redisGrp *redisgroup.Group
