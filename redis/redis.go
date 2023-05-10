@@ -6,6 +6,7 @@ type NodeConf struct {
 	Host     string
 	Port     int
 	Password string
+	DB       int
 }
 
 var redisGrp *redisgroup.Group
@@ -13,7 +14,7 @@ var redisGrp *redisgroup.Group
 func Init(nodeCfgs []*NodeConf) {
 	var nodes []*redisgroup.Node
 	for _, cfg := range nodeCfgs {
-		nodes = append(nodes, redisgroup.NewNode(cfg.host, cfg.port, cfg.password))
+		nodes = append(nodes, redisgroup.NewNodeV2(cfg.Host, cfg.Port, cfg.Password, cfg.DB))
 	}
 	redisGrp = redisgroup.NewGroup(nodes, Logger)
 }
