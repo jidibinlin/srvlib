@@ -30,7 +30,7 @@ func (m *MsgSt) String() string {
 	for i, p := range m.Param {
 		strSeg := fmt.Sprintf("param%d:%+v ", i+1, p)
 		if len(strSeg) > 20 {
-			strSeg = strSeg[:20]
+			strSeg = strSeg[:20] + "..."
 		}
 		str += strSeg
 	}
