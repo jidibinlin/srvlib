@@ -19,7 +19,7 @@ var OpenNewFileByByDateHour CheckTimeToOpenNewFileFunc = func(lastOpenFileTime *
 	lastOpenYear, lastOpenMonth, lastOpenDay := lastOpenFileTime.Date()
 	nowYear, nowMonth, nowDay := time.Now().Date()
 	if lastOpenDay != nowDay || lastOpenMonth != nowMonth || lastOpenYear != nowYear {
-		return time.Now().Format(logName + "01-02.log"), true
+		return time.Now().Format(logName + ".01-02.log"), true
 	}
 
 	return "", false
