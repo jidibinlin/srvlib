@@ -2,27 +2,30 @@ package trace
 
 import (
 	"github.com/995933447/simpletrace"
+	"sync"
 )
 
 func init() {
-	Ctx = &Context{
-		gidToTraceIdMap: map[int64]string{},
-	}
+	Ctx = &Context{}
 }
 
 var Ctx *Context
 
 type Context struct {
-	gidToTraceIdMap map[int64]string
+	gidToTraceIdMap sync.Map
+}
+
+func (c *Context) RemoveGTrace(gid int64) {
+	c.gidToTraceIdMap.Delete(gid)
 }
 
 func (c *Context) GetCurGTrace(gid int64) (string, bool) {
-	traceId, ok := c.gidToTraceIdMap[gid]
-	return traceId, ok
+	traceId, ok := c.gidToTraceIdMap.Load(gid)
+	return traceId.(string), ok
 }
 
 func (c *Context) SetCurGTrace(gid int64, traceId string) {
-	c.gidToTraceIdMap[gid] = traceId
+	c.gidToTraceIdMap.Store(gid, traceId)
 }
 
 func GenTraceId() string {
