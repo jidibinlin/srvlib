@@ -2,6 +2,8 @@ package logger
 
 import (
 	"fmt"
+	"github.com/gzjjyz/srvlib/trace"
+	"github.com/petermattis/goid"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -132,7 +134,11 @@ func GetDetailInfo() string {
 			break
 		}
 	}
-	return fmt.Sprintf("\033[32m%s [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), file, line, funcName)
+	var traceId string
+	if traceId, _ = trace.Ctx.GetCurGTrace(goid.Get()); traceId == "" {
+		traceId = "UNKNOWN"
+	}
+	return fmt.Sprintf("\033[32m%s [trace:%s] [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName)
 }
 
 func Flush() {

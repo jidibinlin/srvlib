@@ -4,8 +4,12 @@ github.com/995933447/log-go v0.0.0-20230420123341-5d684963433b h1:mMs9jXdhcSpesQ
 github.com/995933447/log-go v0.0.0-20230420123341-5d684963433b/go.mod h1:8nYLjLQ598TrCziO2tAADhEFlNxySV+9phaQBzCaSZo=
 github.com/995933447/redisgroup v0.0.0-20230510085956-718f047520a1 h1:KRM0M/G86VK2AgITHm4xhj8M05M/hAFA95SWNHXYDEg=
 github.com/995933447/redisgroup v0.0.0-20230510085956-718f047520a1/go.mod h1:zEWxd86EEJqwAQ6a3X6UXIY1SMMkMJlPFc6K66iiQXY=
+github.com/995933447/simpletrace v0.0.0-20230217061256-c25a914bd376 h1:hIHav2TTYiAGn87d9CGiuuty5cT/YBOb5Uxs52FoDgs=
+github.com/995933447/simpletrace v0.0.0-20230217061256-c25a914bd376/go.mod h1:Kh2+nE3eCIOSIwSo8Sxj/MbWt1KPMJJz+9SHptuYr6s=
 github.com/995933447/std-go v0.0.0-20220806175833-ab3496c0b696 h1:GzBuvejakMWMZ6QWpbpcFmJb9WYrZ++yOrm/IEap+hw=
 github.com/995933447/std-go v0.0.0-20220806175833-ab3496c0b696/go.mod h1:Y48pg+Gwti1Ck6BZSCm/+UHmtzC4A1pARw6UdFMpNaI=
+github.com/995933447/stringhelper-go v0.0.0-20221220072216-628db3bc29d8 h1:q37SO0GTj/dk35jov187h3CACffZle6KjVzgGOrLkBM=
+github.com/995933447/stringhelper-go v0.0.0-20221220072216-628db3bc29d8/go.mod h1:cwkwj1/zndmaLbRYgQqy6qwY/ITAiEMdR+1BGssgXik=
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/benbjohnson/clock v1.1.0 h1:Q92kusRqC1XV2MjkWETPvjJVqKetz1OzxZB7mHJLju8=
@@ -97,6 +101,8 @@ github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OS
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=
 github.com/onsi/gomega v1.18.1 h1:M1GfJqGRrBrrGGsbxzV5dqM2U2ApXefZCQpkukxYRLE=
+github.com/petermattis/goid v0.0.0-20230518223814-80aa455d8761 h1:W04oB3d0J01W5jgYRGKsV8LCM6g9EkCvPkZcmFuy0OE=
+github.com/petermattis/goid v0.0.0-20230518223814-80aa455d8761/go.mod h1:pxMtw7cyUw6B2bRH0ZBANSPg+AoSud1I1iyJHI69jH4=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

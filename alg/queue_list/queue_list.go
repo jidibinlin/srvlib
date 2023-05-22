@@ -6,7 +6,7 @@
 
 package queue_list
 
-import "jjyz/base/lock"
+import "github.com/gzjjyz/srvlib/lock"
 
 // QueueListSt 线程安全队列 使用切片实现
 type QueueListSt struct {

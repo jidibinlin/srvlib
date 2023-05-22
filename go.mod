@@ -17,7 +17,9 @@ require (
 )
 
 require (
+	github.com/995933447/simpletrace v0.0.0-20230217061256-c25a914bd376 // indirect
 	github.com/995933447/std-go v0.0.0-20220806175833-ab3496c0b696 // indirect
+	github.com/995933447/stringhelper-go v0.0.0-20221220072216-628db3bc29d8 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/coreos/etcd v3.3.27+incompatible // indirect
@@ -39,6 +41,7 @@ require (
 	github.com/nats-io/nats-server/v2 v2.9.16 // indirect
 	github.com/nats-io/nkeys v0.4.4 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/petermattis/goid v0.0.0-20230518223814-80aa455d8761 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.43.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect

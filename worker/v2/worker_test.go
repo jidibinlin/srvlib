@@ -16,11 +16,11 @@ func TestWorker(t *testing.T) {
 	go worker.GoStart()
 
 	worker.RegisterMsgHandler(123, func(param ...interface{}) {
-		fmt.Printf("i consume msg 123.%d\n", param[0])
+		logger.Debug("i consume msg 123.%d\n", param[0])
 	})
 
 	worker.RegisterMsgHandler(234, func(param ...interface{}) {
-		fmt.Printf("i consume msg 234.%d\n", param[0])
+		logger.Debug("i consume msg 234.%d\n", param[0])
 	})
 
 	now := time.Now()
