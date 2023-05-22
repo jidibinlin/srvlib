@@ -2,8 +2,10 @@ package v2
 
 import (
 	"github.com/gzjjyz/srvlib/logger"
+	"github.com/gzjjyz/srvlib/trace"
 	"github.com/gzjjyz/srvlib/utils"
 	work "github.com/gzjjyz/srvlib/worker"
+	"github.com/petermattis/goid"
 	"log"
 	"sync/atomic"
 	"time"
@@ -14,14 +16,19 @@ const (
 	loopEventProcInterval = time.Millisecond * 10
 )
 
+type TracedMsg struct {
+	TraceId string
+	*work.MsgSt
+}
+
 type Worker struct {
 	stopped             atomic.Bool
 	exitCh              chan bool
 	loopFunc            func()
 	mHdl                map[uint32]work.MsgHdlType
-	msgCh               chan *work.MsgSt
+	msgCh               chan *TracedMsg
 	procBatchMsgMaxSize uint32
-	firstMsgInLoop      *work.MsgSt
+	firstMsgInLoop      *TracedMsg
 	stoppedRecvFromGate atomic.Bool
 	exitGateCh          chan bool
 }
@@ -34,7 +41,7 @@ func NewWorker(msgCapacity uint32, loopFunc func()) *Worker {
 	worker.exitCh = make(chan bool)
 	worker.exitGateCh = make(chan bool)
 	worker.loopFunc = loopFunc
-	worker.msgCh = make(chan *work.MsgSt, msgCapacity)
+	worker.msgCh = make(chan *TracedMsg, msgCapacity)
 	worker.procBatchMsgMaxSize = msgCapacity
 	worker.mHdl = make(map[uint32]work.MsgHdlType)
 	return worker
@@ -53,26 +60,36 @@ func (w *Worker) RegisterMsgHandler(msgId uint32, hdl work.MsgHdlType) {
 	w.mHdl[msgId] = hdl
 }
 
+func (w *Worker) doSendMsg(id uint32, params ...interface{}) {
+	var (
+		traceId string
+		ok      bool
+	)
+	if traceId, ok = trace.Ctx.GetCurGTrace(goid.Get()); !ok {
+		traceId = trace.GenTraceId()
+	}
+	st := &TracedMsg{
+		MsgSt: &work.MsgSt{
+			MsgId: id,
+			Param: params,
+		},
+		TraceId: traceId,
+	}
+	w.msgCh <- st
+}
+
 func (w *Worker) SendMsg(id uint32, params ...interface{}) {
 	if w.stopped.Load() {
 		return
 	}
-	st := &work.MsgSt{
-		MsgId: id,
-		Param: params,
-	}
-	w.msgCh <- st
+	w.doSendMsg(id, params...)
 }
 
 func (w *Worker) SendMsgFromGate(id uint32, params ...interface{}) {
 	if w.stoppedRecvFromGate.Load() {
 		return
 	}
-	st := &work.MsgSt{
-		MsgId: id,
-		Param: params,
-	}
-	w.msgCh <- st
+	w.doSendMsg(id, params...)
 }
 
 func (w *Worker) GoStart() bool {
@@ -118,9 +135,9 @@ func (w *Worker) loop() {
 		}
 	}()
 
-	var msgList []*work.MsgSt
+	var msgList []*TracedMsg
 	if w.firstMsgInLoop != nil {
-		msgList = w.FetchAndMergeBatch([]*work.MsgSt{w.firstMsgInLoop})
+		msgList = w.FetchAndMergeBatch([]*TracedMsg{w.firstMsgInLoop})
 		w.firstMsgInLoop = nil
 	} else {
 		msgList = w.FetchAndMergeBatch(nil)
@@ -129,10 +146,13 @@ func (w *Worker) loop() {
 	w.ProcessMsg(msgList)
 }
 
-func (w *Worker) ProcessMsg(msgList []*work.MsgSt) {
+func (w *Worker) ProcessMsg(msgList []*TracedMsg) {
+	gid := goid.Get()
 	for _, msg := range msgList {
 		t := time.Now()
 		if fn, ok := w.mHdl[msg.MsgId]; ok {
+			trace.Ctx.SetCurGTrace(gid, msg.TraceId)
+			logger.Info("processing msg:%s", msg.String())
 			utils.ProtectRun(func() {
 				fn(msg.Param[:]...)
 			})
@@ -143,7 +163,7 @@ func (w *Worker) ProcessMsg(msgList []*work.MsgSt) {
 	}
 }
 
-func (w *Worker) FetchAndMergeBatch(msgList []*work.MsgSt) []*work.MsgSt {
+func (w *Worker) FetchAndMergeBatch(msgList []*TracedMsg) []*TracedMsg {
 	t := time.Now()
 	for {
 		select {
