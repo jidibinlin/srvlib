@@ -154,7 +154,6 @@ func (w *Worker) ProcessMsg(msgList []*TracedMsg) {
 		t := time.Now()
 		if fn, ok := w.mHdl[msg.MsgId]; ok {
 			trace.Ctx.SetCurGTrace(gid, msg.TraceId)
-			logger.Info("processing msg:%s", msg.String())
 			utils.ProtectRun(func() {
 				fn(msg.Param[:]...)
 			})
