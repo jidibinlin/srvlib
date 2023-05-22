@@ -7,6 +7,8 @@
 package utils
 
 import (
+	"github.com/gzjjyz/srvlib/trace"
+	"github.com/petermattis/goid"
 	"runtime"
 
 	"github.com/gzjjyz/srvlib/logger"
@@ -36,6 +38,17 @@ func ProtectRun(fn func()) {
 
 // ProtectGo in fact, we could add trace system into there, consider it!!除了recover保护程序以外,这里还可以考虑加入系统链路信息
 func ProtectGo(fn func()) {
-	// todo, parse trace id from global trace context(map[gid]*trace), and bind trace to routine
-	go ProtectRun(fn)
+	var (
+		traceId string
+		ok      bool
+	)
+	if traceId, ok = trace.Ctx.GetCurGTrace(goid.Get()); !ok {
+		traceId = trace.GenTraceId()
+	}
+	go func() {
+		gid := goid.Get()
+		trace.Ctx.SetCurGTrace(gid, traceId)
+		ProtectRun(fn)
+		trace.Ctx.RemoveGTrace(gid)
+	}()
 }
