@@ -28,7 +28,11 @@ type MsgSt struct {
 func (m *MsgSt) String() string {
 	str := fmt.Sprintf("id:%d ", m.MsgId)
 	for i, p := range m.Param {
-		str += fmt.Sprintf("param%d:%v ", i+1, p)
+		strSeg := fmt.Sprintf("param%d:%+v ", i+1, p)
+		if len(strSeg) > 20 {
+			strSeg = strSeg[:20]
+		}
+		str += strSeg
 	}
 	return str
 }
