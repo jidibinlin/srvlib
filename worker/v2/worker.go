@@ -94,6 +94,8 @@ func (w *Worker) SendMsgFromGate(id uint32, params ...interface{}) {
 
 func (w *Worker) GoStart() bool {
 	utils.ProtectGo(func() {
+		defer trace.Ctx.RemoveGTrace(goid.Get())
+
 		doLoopFuncTk := time.NewTicker(loopEventProcInterval)
 		defer doLoopFuncTk.Stop()
 	out:
