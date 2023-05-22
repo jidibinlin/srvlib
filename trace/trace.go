@@ -21,6 +21,9 @@ func (c *Context) RemoveGTrace(gid int64) {
 
 func (c *Context) GetCurGTrace(gid int64) (string, bool) {
 	traceId, ok := c.gidToTraceIdMap.Load(gid)
+	if !ok {
+		return "", false
+	}
 	return traceId.(string), ok
 }
 
