@@ -127,12 +127,12 @@ func GetDetailInfo() string {
 		}
 	}
 	funcName := f.Name()
-	for i := len(funcName) - 1; i > 0; i-- {
-		if funcName[i] == '.' {
-			funcName = funcName[i+1:]
-			break
-		}
-	}
+	//for i := len(funcName) - 1; i > 0; i-- {
+	//	if funcName[i] == '.' {
+	//		funcName = funcName[i+1:]
+	//		break
+	//	}
+	//}
 	var traceId string
 	if traceId, _ = trace.Ctx.GetCurGTrace(goid.Get()); traceId == "" {
 		traceId = "UNKNOWN"
@@ -209,9 +209,14 @@ func Stack(format string, v ...interface{}) {
 // ErrorfNoCaller 错误类型日志 不包含调用信息
 func ErrorfNoCaller(format string, v ...interface{}) {
 	if level <= ErrorLevel {
+		var traceId string
+		if traceId, _ = trace.Ctx.GetCurGTrace(goid.Get()); traceId == "" {
+			traceId = "UNKNOWN"
+		}
+
 		var builder strings.Builder
 		builder.WriteString(errorColor)
-		timeInfo := fmt.Sprintf("%s ", time.Now().Format("01-02 15:04:05.9999"))
+		timeInfo := fmt.Sprintf("["+logName+"] %s [trace:%s]", time.Now().Format("01-02 15:04:05.9999"), traceId)
 		builder.WriteString(timeInfo)
 		builder.WriteString(fmt.Sprintf(format, v...))
 		writer.Write(builder.String() + "\n")
