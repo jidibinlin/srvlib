@@ -3,6 +3,8 @@ package network
 import (
 	"encoding/binary"
 	"errors"
+	"github.com/gzjjyz/srvlib/trace"
+	"github.com/petermattis/goid"
 	"io"
 	"math"
 )
@@ -10,6 +12,10 @@ import (
 // --------------
 // | len | data |
 // --------------
+
+// -------------------------------------
+// | len | trace id len |trace id|data |
+// -------------------------------------
 type MsgParser struct {
 	lenMsgLen    int
 	minMsgLen    uint32
@@ -65,10 +71,23 @@ func (p *MsgParser) SetByteOrder(littleEndian bool) {
 func (p *MsgParser) Read(conn *TCPConn) ([]byte, error) {
 	var b [4]byte
 	bufMsgLen := b[:p.lenMsgLen]
-
 	// read len
 	if _, err := io.ReadFull(conn, bufMsgLen); err != nil {
 		return nil, err
+	}
+
+	var traceIdLenBytes [1]byte
+	if _, err := io.ReadFull(conn, traceIdLenBytes[:]); err != nil {
+		return nil, err
+	}
+
+	traceIdLen := traceIdLenBytes[0]
+	if traceIdLen > 0 {
+		traceIdBytes := make([]byte, traceIdLen)
+		if _, err := io.ReadFull(conn, traceIdBytes); err != nil {
+			return nil, err
+		}
+		trace.Ctx.SetCurGTrace(goid.Get(), string(traceIdBytes))
 	}
 
 	// parse len
@@ -121,7 +140,14 @@ func (p *MsgParser) Write(conn *TCPConn, args ...[]byte) error {
 		return errors.New("message too short")
 	}
 
-	msg := make([]byte, uint32(p.lenMsgLen)+msgLen)
+	var traceIdLen int
+	traceId, ok := trace.Ctx.GetCurGTrace(goid.Get())
+	if ok {
+		traceIdLen = len(traceId)
+	}
+
+	headerLen := p.lenMsgLen + 1 + traceIdLen
+	msg := make([]byte, uint32(headerLen)+msgLen)
 
 	// write len
 	switch p.lenMsgLen {
@@ -141,8 +167,14 @@ func (p *MsgParser) Write(conn *TCPConn, args ...[]byte) error {
 		}
 	}
 
+	msg[p.lenMsgLen] = byte(traceIdLen)
+
+	if traceIdLen > 0 {
+		copy(msg[p.lenMsgLen+1:], traceId)
+	}
+
 	// write data
-	l := p.lenMsgLen
+	l := headerLen
 	for i := 0; i < len(args); i++ {
 		copy(msg[l:], args[i])
 		l += len(args[i])
