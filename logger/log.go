@@ -137,7 +137,7 @@ func GetDetailInfo() string {
 	if traceId, _ = trace.Ctx.GetCurGTrace(goid.Get()); traceId == "" {
 		traceId = "UNKNOWN"
 	}
-	return fmt.Sprintf("\033[32m[\"+logName+\"] %s [trace:%s] [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName)
+	return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName)
 }
 
 func Flush() {
