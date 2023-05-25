@@ -48,7 +48,7 @@ func ProtectGo(fn func()) {
 	go func() {
 		gid := goid.Get()
 		trace.Ctx.SetCurGTrace(gid, traceId)
+		defer trace.Ctx.RemoveGTrace(gid)
 		ProtectRun(fn)
-		trace.Ctx.RemoveGTrace(gid)
 	}()
 }

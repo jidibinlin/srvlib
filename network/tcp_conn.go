@@ -111,3 +111,11 @@ func (tcpConn *TCPConn) ReadMsg() ([]byte, error) {
 func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
 	return tcpConn.msgParser.Write(tcpConn, args...)
 }
+
+func (tcpConn *TCPConn) ReadMsgWithTrace() ([]byte, error) {
+	return tcpConn.msgParser.ReadWithTrace(tcpConn)
+}
+
+func (tcpConn *TCPConn) WriteMsgWithTrace(args ...[]byte) error {
+	return tcpConn.msgParser.WriteWithTrace(tcpConn, args...)
+}
