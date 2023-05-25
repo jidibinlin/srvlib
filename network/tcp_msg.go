@@ -112,8 +112,7 @@ func (p *MsgParser) Read(conn *TCPConn) ([]byte, error) {
 	return msgData, nil
 }
 
-// goroutine safe
-func (p *MsgParser) Write(conn *TCPConn, args ...[]byte) error {
+func (p *MsgParser) PackMsg(args ...[]byte) ([]byte, error) {
 	// get len
 	var msgLen uint32
 	for i := 0; i < len(args); i++ {
@@ -122,9 +121,9 @@ func (p *MsgParser) Write(conn *TCPConn, args ...[]byte) error {
 
 	// check len
 	if msgLen > p.maxMsgLen {
-		return errors.New("message too long")
+		return nil, errors.New("message too long")
 	} else if msgLen < p.minMsgLen {
-		return errors.New("message too short")
+		return nil, errors.New("message too short")
 	}
 
 	msg := make([]byte, uint32(p.lenMsgLen)+msgLen)
@@ -154,8 +153,16 @@ func (p *MsgParser) Write(conn *TCPConn, args ...[]byte) error {
 		l += len(args[i])
 	}
 
-	conn.Write(msg)
+	return msg, nil
+}
 
+// goroutine safe
+func (p *MsgParser) Write(conn *TCPConn, args ...[]byte) error {
+	buf, err := p.PackMsg(args...)
+	if err != nil {
+		return err
+	}
+	conn.Write(buf)
 	return nil
 }
 
@@ -217,8 +224,7 @@ func (p *MsgParser) ReadWithTrace(conn *TCPConn) ([]byte, error) {
 	return msgData, nil
 }
 
-// goroutine safe
-func (p *MsgParser) WriteWithTrace(conn *TCPConn, args ...[]byte) error {
+func (p *MsgParser) PackMsgWithTrace(args ...[]byte) ([]byte, error) {
 	// get len
 	var msgLen uint32
 	for i := 0; i < len(args); i++ {
@@ -227,9 +233,9 @@ func (p *MsgParser) WriteWithTrace(conn *TCPConn, args ...[]byte) error {
 
 	// check len
 	if msgLen > p.maxMsgLen {
-		return errors.New("message too long")
+		return nil, errors.New("message too long")
 	} else if msgLen < p.minMsgLen {
-		return errors.New("message too short")
+		return nil, errors.New("message too short")
 	}
 
 	var traceIdLen int
@@ -272,7 +278,15 @@ func (p *MsgParser) WriteWithTrace(conn *TCPConn, args ...[]byte) error {
 		l += len(args[i])
 	}
 
-	conn.Write(msg)
+	return msg, nil
+}
 
+// goroutine safe
+func (p *MsgParser) WriteWithTrace(conn *TCPConn, args ...[]byte) error {
+	buf, err := p.PackMsgWithTrace(args...)
+	if err != nil {
+		return err
+	}
+	conn.Write(buf)
 	return nil
 }
