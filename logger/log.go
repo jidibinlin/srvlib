@@ -2,8 +2,6 @@ package logger
 
 import (
 	"fmt"
-	"github.com/gzjjyz/srvlib/trace"
-	"github.com/petermattis/goid"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -12,10 +10,13 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/gzjjyz/srvlib/trace"
+	"github.com/petermattis/goid"
 )
 
 const (
-	traceLevel = iota // Trace级别
+	TraceLevel = iota // Trace级别
 	DebugLevel        // Debug级别
 	InfoLevel         // Info级别
 	WarnLevel         // Warn级别
@@ -30,6 +31,7 @@ const (
 )
 
 const (
+	traceColor = "\033[32m[Trace]\033[0m\t"
 	debugColor = "\033[32m[Debug]\033[0m\t"
 	infoColor  = "\033[32m[Info]\033[0m\t"
 	warnColor  = "\033[35m[Warn]\033[0m\t"
@@ -38,16 +40,22 @@ const (
 	fatalColor = "\033[31m[Fatal]\033[0m\t"
 )
 
+const (
+	ConsoleLogStyle_Simple = "simple"
+	ConsoleLogStyle_Detail = "detail"
+)
+
 var IsOutputScreen = true
 
 var (
-	writer  *FileLoggerWriter
-	level   = traceLevel
-	logName string //日志名称
-	skip    = 2    //跳过等级
-	logPath string
-	hasInit bool
-	initMu  sync.Mutex
+	writer          *FileLoggerWriter
+	level           = TraceLevel
+	logName         string //日志名称
+	skip            = 2    //跳过等级
+	logPath         string
+	hasInit         bool
+	initMu          sync.Mutex
+	consoleLogStyle string = ConsoleLogStyle_Detail
 )
 
 // GetLevel 获取日志级别
@@ -57,8 +65,8 @@ func GetLevel() int {
 
 // SetLevel 设置日志级别
 func SetLevel(l int) {
-	if l > fatalLevel || l < traceLevel {
-		level = traceLevel
+	if l > fatalLevel || l < TraceLevel {
+		level = TraceLevel
 	} else {
 		level = l
 	}
@@ -67,6 +75,13 @@ func SetLevel(l int) {
 // SetLogPath 设置日志路径
 func SetLogPath(path string) {
 	logPath = path
+}
+
+func SetConsoleLogStyle(style string) {
+	if style != ConsoleLogStyle_Simple && style != ConsoleLogStyle_Detail {
+		return
+	}
+	consoleLogStyle = style
 }
 
 func HasInit() bool {
@@ -112,7 +127,14 @@ func InitLogger(name string) {
 	Info("==========================================")
 }
 
-func GetDetailInfo() string {
+type InfoStyle int
+
+const (
+	InfoStyle_Detail InfoStyle = 1
+	InfoStyle_Simple InfoStyle = 2
+)
+
+func GetDetailInfo(style InfoStyle) string {
 	pc := make([]uintptr, 10) // at least 1 entry needed
 	runtime.Callers(skip, pc)
 	f := runtime.FuncForPC(pc[skip])
@@ -137,7 +159,15 @@ func GetDetailInfo() string {
 	if traceId, _ = trace.Ctx.GetCurGTrace(goid.Get()); traceId == "" {
 		traceId = "UNKNOWN"
 	}
-	return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName)
+
+	if style == InfoStyle_Detail {
+		return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName)
+	}
+
+	if style == InfoStyle_Simple {
+		return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line)
+	}
+	return ""
 }
 
 func Flush() {
@@ -151,7 +181,7 @@ func doWrite(curLv int, colorInfo, format string, v ...interface{}) {
 
 	var builder strings.Builder
 	builder.WriteString(colorInfo)
-	builder.WriteString(GetDetailInfo())
+	builder.WriteString(GetDetailInfo(InfoStyle_Detail))
 	builder.WriteString(fmt.Sprintf(format, v...))
 
 	if curLv >= stackLevel {
@@ -172,8 +202,24 @@ func doWrite(curLv int, colorInfo, format string, v ...interface{}) {
 	}
 
 	if IsOutputScreen {
+		if consoleLogStyle == ConsoleLogStyle_Simple && curLv == TraceLevel {
+			return
+		}
+
+		if consoleLogStyle == ConsoleLogStyle_Simple {
+			var consoleStringBuilder strings.Builder
+			consoleStringBuilder.WriteString(colorInfo)
+			consoleStringBuilder.WriteString(GetDetailInfo(InfoStyle_Simple))
+			consoleStringBuilder.WriteString(fmt.Sprintf(format, v...))
+			fmt.Println(consoleStringBuilder.String())
+			return
+		}
 		fmt.Println(builder.String())
 	}
+}
+
+func Trace(format string, v ...interface{}) {
+	doWrite(TraceLevel, traceColor, format, v...)
 }
 
 // Debug 调试类型日志
