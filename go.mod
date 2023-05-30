@@ -6,18 +6,23 @@ require (
 	github.com/995933447/confloader v0.0.0-20230314141707-e7b191386ae2
 	github.com/995933447/log-go v0.0.0-20230420123341-5d684963433b
 	github.com/995933447/redisgroup v0.0.0-20230510085956-718f047520a1
+	github.com/995933447/simpletrace v0.0.0-20230217061256-c25a914bd376
+	github.com/golang/protobuf v1.5.3
+	github.com/golang/snappy v0.0.4
 	github.com/gorilla/websocket v1.5.0
 	github.com/gzjjyz/micro v0.0.2
 	github.com/huandu/go-clone v1.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/nats-io/nats.go v1.25.0
+	github.com/petermattis/goid v0.0.0-20230518223814-80aa455d8761
+	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
+	golang.org/x/net v0.9.0
 	google.golang.org/grpc v1.33.1
 	gorm.io/driver/mysql v1.5.0
 	gorm.io/gorm v1.25.1
 )
 
 require (
-	github.com/995933447/simpletrace v0.0.0-20230217061256-c25a914bd376 // indirect
 	github.com/995933447/std-go v0.0.0-20220806175833-ab3496c0b696 // indirect
 	github.com/995933447/stringhelper-go v0.0.0-20221220072216-628db3bc29d8 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
@@ -30,7 +35,6 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/howeyc/fsnotify v0.9.0 // indirect
@@ -41,7 +45,6 @@ require (
 	github.com/nats-io/nats-server/v2 v2.9.16 // indirect
 	github.com/nats-io/nkeys v0.4.4 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/petermattis/goid v0.0.0-20230518223814-80aa455d8761 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.43.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
@@ -49,7 +52,6 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
-	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/genproto v0.0.0-20200513103714-09dca8ec2884 // indirect
