@@ -17,6 +17,8 @@ func (l LoggerWriter) Write(ctx context.Context, level log.Level, format string,
 	switch level {
 	case log.LevelDebug:
 		logger.Debug(format, args)
+	case log.LevelInfo:
+		logger.Info(format, args)
 	case log.LevelWarn:
 		logger.Warn(format, args)
 	case log.LevelError:
