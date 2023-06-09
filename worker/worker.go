@@ -7,6 +7,7 @@
 package worker
 
 import (
+	"fmt"
 	"github.com/gzjjyz/srvlib/alg/queue_list"
 	"github.com/gzjjyz/srvlib/logger"
 	"github.com/gzjjyz/srvlib/utils"
@@ -22,6 +23,18 @@ const SleepTime = time.Millisecond * 10
 type MsgSt struct {
 	MsgId uint32        // 消息id
 	Param []interface{} // 参数
+}
+
+func (m *MsgSt) String() string {
+	str := fmt.Sprintf("id:%d ", m.MsgId)
+	for i, p := range m.Param {
+		strSeg := fmt.Sprintf("param%d:%+v ", i+1, p)
+		if len(strSeg) > 20 {
+			strSeg = strSeg[:20] + "..."
+		}
+		str += strSeg
+	}
+	return str
 }
 
 type Worker struct {
