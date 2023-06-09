@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/md5"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -9,7 +10,6 @@ import (
 	"net"
 	"os"
 	"path/filepath"
-	"runtime"
 	"runtime/debug"
 	"strconv"
 	"strings"
@@ -43,9 +43,18 @@ func LoadJson(mgr interface{}, module string) bool {
 	return true
 }
 
+var (
+	isDev bool
+)
+
+func ParseCmdInput() {
+	isDev = *flag.Bool("dev", false, "is it dev now?")
+	flag.Parse()
+}
+
 // IsDev 是否开发版本
 func IsDev() bool {
-	return runtime.GOOS == "windows"
+	return isDev
 }
 
 // GetMd5 获取md5
