@@ -48,7 +48,7 @@ var (
 )
 
 func ParseCmdInput() {
-	isDev = *flag.Bool("dev", false, "is it dev now?")
+	flag.BoolVar(&isDev, "dev", false, "is it dev now?")
 	flag.Parse()
 }
 

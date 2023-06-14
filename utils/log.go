@@ -17,7 +17,7 @@ func SafeLogErr(err error, printWhileLoggerNoReady bool) {
 
 func SafeLogWarn(printWhileLoggerNoReady bool, format string, args ...interface{}) {
 	if !logger.HasInit() && printWhileLoggerNoReady {
-		fmt.Printf(format, args)
+		fmt.Printf(format, args...)
 		return
 	}
 
