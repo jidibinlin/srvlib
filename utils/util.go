@@ -280,15 +280,15 @@ func GetSrcServerByActorId(actorId uint64) uint32 {
 
 // CalcMillionRate 万分比加成计算
 func CalcMillionRate(base, rate uint32) uint32 {
-	return uint32(math.Ceil(float64(base) * float64(rate) / 10000))
+	return uint32(math.Ceil(float64(base) * (float64(rate) / 10000 + 1)))
 }
 
 func CalcMillionRate64(base, rate int64) int64 {
-	return base * rate / 10000
+	return base * (rate / 10000 + 1)
 }
 
 func CalcMillionRateBoth64(base, rate int64) int64 {
-	return int64(math.Ceil(float64(base) * float64(rate) / float64(10000)))
+	return int64(math.Ceil(float64(base) * (float64(rate) / 10000 + 1)))
 }
 
 // CalcMillionRateRevert 万分比加成计算, 越加越小
@@ -298,7 +298,7 @@ func CalcMillionRateRevert(base, rate int64) int64 {
 
 // CalcBillionRate 百万分比加成计算
 func CalcBillionRate(base, rate uint32) uint32 {
-	return uint32(math.Ceil(float64(base) * float64(rate) / 1000000))
+	return uint32(math.Ceil(float64(base) * (float64(rate) / 1000000 + 1)))
 }
 
 // RevertCalcMillionRate 万分比加成计算, 越加越小
