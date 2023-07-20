@@ -7,6 +7,7 @@ require (
 	github.com/995933447/log-go v0.0.0-20230420123341-5d684963433b
 	github.com/995933447/redisgroup v0.0.0-20230510085956-718f047520a1
 	github.com/995933447/simpletrace v0.0.0-20230217061256-c25a914bd376
+	github.com/elliotchance/testify-stats v1.0.3
 	github.com/golang/protobuf v1.5.3
 	github.com/golang/snappy v0.0.4
 	github.com/gorilla/websocket v1.5.0
@@ -15,7 +16,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/nats-io/nats.go v1.25.0
 	github.com/petermattis/goid v0.0.0-20230518223814-80aa455d8761
-	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
+	github.com/stretchr/testify v1.8.1
 	golang.org/x/net v0.9.0
 	google.golang.org/grpc v1.33.1
 	gorm.io/driver/mysql v1.5.0
@@ -31,6 +32,7 @@ require (
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/coreos/pkg v0.0.0-20230327231512-ba87abf18a23 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
@@ -45,6 +47,7 @@ require (
 	github.com/nats-io/nats-server/v2 v2.9.16 // indirect
 	github.com/nats-io/nkeys v0.4.4 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.43.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
@@ -56,6 +59,8 @@ require (
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/genproto v0.0.0-20200513103714-09dca8ec2884 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 replace (
