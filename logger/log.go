@@ -26,7 +26,7 @@ const (
 )
 
 const (
-	LogFileMaxSize = 1024 * 1024 * 1024
+	LogFileMaxSize = 1024 * 1024 * 1024 * 10
 	fileMode       = 0777
 )
 
@@ -108,7 +108,7 @@ func InitLogger(name string) {
 
 	//log文件夹不存在则先创建
 	if logPath == "" {
-		logPath = "log"
+		logPath = DefaultLogPath
 	}
 
 	logName = name

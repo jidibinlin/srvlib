@@ -23,6 +23,7 @@ require (
 )
 
 require (
+	github.com/995933447/gonetutil v0.0.0-20230517070832-763d0c3b1d7e // indirect
 	github.com/995933447/std-go v0.0.0-20220806175833-ab3496c0b696 // indirect
 	github.com/995933447/stringhelper-go v0.0.0-20221220072216-628db3bc29d8 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
