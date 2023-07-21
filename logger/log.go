@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gzjjyz/srvlib/trace"
 	"github.com/petermattis/goid"
@@ -113,7 +114,7 @@ func InitLogger(name string) {
 
 	logName = name
 
-	writer = NewFileLoggerWriter(logPath, LogFileMaxSize, 5, OpenNewFileByByDateHour, 10000)
+	writer = NewFileLoggerWriter(logPath, LogFileMaxSize, 5, OpenNewFileByByDateHour, 100000)
 	go func() {
 		err := writer.Loop()
 		if err != nil {
@@ -182,7 +183,12 @@ func doWrite(curLv int, colorInfo, format string, v ...interface{}) {
 	var builder strings.Builder
 	builder.WriteString(colorInfo)
 	builder.WriteString(GetDetailInfo(InfoStyle_Detail))
-	builder.WriteString(fmt.Sprintf(format, v...))
+	content := fmt.Sprintf(format, v...)
+	// protect disk
+	if utf8.RuneCountInString(content) > 1000 {
+		content = string([]rune(content)[:1000]) + "..."
+	}
+	builder.WriteString(content)
 
 	if curLv >= stackLevel {
 		buf := make([]byte, 4096)

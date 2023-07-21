@@ -120,7 +120,12 @@ func (w *FileLoggerWriter) isFlushingNow() bool {
 }
 
 func (w *FileLoggerWriter) Write(logContent string) {
-	w.bufCh <- []byte(logContent)
+	select {
+	case w.bufCh <- []byte(logContent):
+	default:
+		// never blocking main thread
+		fmt.Println("log content cached buf full, lost:" + logContent)
+	}
 }
 
 func (w *FileLoggerWriter) Loop() error {
