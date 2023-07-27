@@ -57,6 +57,7 @@ var (
 	hasInit         bool
 	initMu          sync.Mutex
 	consoleLogStyle string = ConsoleLogStyle_Detail
+	logPrefix              = ""
 )
 
 // GetLevel 获取日志级别
@@ -76,6 +77,11 @@ func SetLevel(l int) {
 // SetLogPath 设置日志路径
 func SetLogPath(path string) {
 	logPath = path
+}
+
+// SetLogPath 设置日志路径
+func SetLogPrefix(prefix string) {
+	logPrefix = prefix
 }
 
 func SetConsoleLogStyle(style string) {
@@ -162,11 +168,11 @@ func GetDetailInfo(style InfoStyle) string {
 	}
 
 	if style == InfoStyle_Detail {
-		return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d %s]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName)
+		return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d %s] %s\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, funcName, logPrefix)
 	}
 
 	if style == InfoStyle_Simple {
-		return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d]\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line)
+		return fmt.Sprintf("\033[32m["+logName+"] %s [trace:%s] [%s:%d] %s\033[0m ", time.Now().Format("01-02 15:04:05.9999"), traceId, file, line, logPrefix)
 	}
 	return ""
 }
