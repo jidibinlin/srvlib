@@ -7,6 +7,7 @@ import (
 	work "github.com/gzjjyz/srvlib/worker"
 	"github.com/petermattis/goid"
 	"log"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -24,6 +25,7 @@ type TracedMsg struct {
 type Worker struct {
 	stopped             atomic.Bool
 	exitCh              chan bool
+	exitWait            sync.WaitGroup
 	loopFunc            func()
 	mHdl                map[uint32]work.MsgHdlType
 	msgCh               chan *TracedMsg
@@ -103,9 +105,13 @@ func (w *Worker) GoStart() bool {
 			select {
 			case <-w.exitCh:
 				w.stopped.Store(true)
+				w.ProcessMsg(w.FetchAndMergeBatch(nil))
+				w.exitWait.Done()
 				break out
 			case <-w.exitGateCh:
 				w.stoppedRecvFromGate.Store(true)
+				w.ProcessMsg(w.FetchAndMergeBatch(nil))
+				w.exitWait.Done()
 				break out
 			case w.firstMsgInLoop = <-w.msgCh:
 				w.loop()
@@ -121,13 +127,15 @@ func (w *Worker) GoStart() bool {
 }
 
 func (w *Worker) Stop() {
+	w.exitWait.Add(1)
 	w.exitCh <- true
-	w.ProcessMsg(w.FetchAndMergeBatch(nil))
+	w.exitWait.Wait()
 }
 
 func (w *Worker) StopGate() {
+	w.exitWait.Add(1)
 	w.exitGateCh <- true
-	w.ProcessMsg(w.FetchAndMergeBatch(nil))
+	w.exitWait.Wait()
 }
 
 func (w *Worker) loop() {

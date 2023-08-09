@@ -52,5 +52,5 @@ func TestWorker(t *testing.T) {
 	}
 
 	logger.Debug(time.Since(now).String())
-	time.Sleep(time.Second)
+	worker.Stop()
 }
