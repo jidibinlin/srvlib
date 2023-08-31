@@ -199,7 +199,7 @@ func doWrite(curLv int, colorInfo, format string, v ...interface{}) {
 	if curLv >= stackLevel {
 		buf := make([]byte, 4096)
 		l := runtime.Stack(buf, true)
-		builder.WriteString("\n")
+		builder.WriteString("\t")
 		builder.WriteString(string(buf[:l]))
 	}
 
