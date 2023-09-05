@@ -3,4 +3,4 @@
 
 package logger
 
-const DefaultLogPath = "/var/log/gzjjyz"
+const DefaultLogPath = "/data/log/gzjjyz"
